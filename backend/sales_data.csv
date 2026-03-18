@@ -1,0 +1,15 @@
+id,date,region,product,category,revenue,units_sold,sales_rep
+1,2023-07-01,North,Laptop Pro,Electronics,12000,10,John Doe
+2,2023-07-05,South,Coffee Maker,Appliances,3000,30,Jane Smith
+3,2023-07-10,East,Desktop PC,Electronics,16000,8,Bob Johnson
+4,2023-07-15,West,Headphones,Electronics,1500,15,Alice Brown
+5,2023-08-05,North,Smartwatch,Electronics,4000,20,John Doe
+6,2023-08-12,South,Laptop Pro,Electronics,9600,8,Jane Smith
+7,2023-08-18,East,Headphones,Electronics,2000,20,Bob Johnson
+8,2023-08-25,West,Coffee Maker,Appliances,4000,40,Alice Brown
+9,2023-09-02,North,Desktop PC,Electronics,10000,5,John Doe
+10,2023-09-08,South,Smartwatch,Electronics,3000,15,Jane Smith
+11,2023-09-15,East,Laptop Pro,Electronics,14400,12,Bob Johnson
+12,2023-09-22,West,Desktop PC,Electronics,18000,9,Alice Brown
+13,2023-09-28,North,Coffee Maker,Appliances,2500,25,John Doe
+14,2023-09-30,South,Headphones,Electronics,3000,30,Jane Smith
