@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import {
-  BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
+  BarChart, Bar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
@@ -39,11 +39,11 @@ const DynamicChart = ({ type, data }) => {
     return (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart {...commonProps}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-          <XAxis dataKey={categoryKey} stroke="var(--text-muted)" />
-          <YAxis stroke="var(--text-muted)" />
-          <Tooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} contentStyle={customTooltipStyle} />
-          <Bar dataKey={valueKey} fill="var(--accent-primary)" radius={[4, 4, 0, 0]} />
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+          <XAxis dataKey={categoryKey} stroke="var(--text-muted)" tickLine={false} axisLine={false} dy={10} />
+          <YAxis stroke="var(--text-muted)" tickLine={false} axisLine={false} dx={-10} />
+          <Tooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={customTooltipStyle} />
+          <Bar dataKey={valueKey} fill="gray" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     );
@@ -52,13 +52,19 @@ const DynamicChart = ({ type, data }) => {
   if (type === 'line') {
     return (
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart {...commonProps}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-          <XAxis dataKey={categoryKey} stroke="var(--text-muted)" />
-          <YAxis stroke="var(--text-muted)" />
-          <Tooltip contentStyle={customTooltipStyle} />
-          <Line type="monotone" dataKey={valueKey} stroke="var(--success)" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} />
-        </LineChart>
+        <AreaChart {...commonProps}>
+          <defs>
+            <linearGradient id="lineColorGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.6}/>
+              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+          <XAxis dataKey={categoryKey} stroke="var(--text-muted)" tickLine={false} axisLine={false} dy={10} />
+          <YAxis stroke="var(--text-muted)" tickLine={false} axisLine={false} dx={-10} />
+          <Tooltip contentStyle={customTooltipStyle} itemStyle={{ color: '#8b5cf6', fontWeight: 600 }} />
+          <Area type="monotone" dataKey={valueKey} stroke="#8b5cf6" strokeWidth={4} fillOpacity={1} fill="url(#lineColorGradient)" activeDot={{ r: 6, fill: '#8b5cf6', stroke: '#fff', strokeWidth: 2 }} />
+        </AreaChart>
       </ResponsiveContainer>
     );
   }

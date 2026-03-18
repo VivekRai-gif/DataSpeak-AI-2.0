@@ -164,7 +164,7 @@ const Landing = () => {
               &times;
             </button>
             <iframe 
-              src="https://www.youtube.com/embed/fP1vv7Zbs7E?autoplay=1" 
+              src="https://www.youtube.com/embed/?autoplay=1" 
               title="DataSpeak AI Demo" 
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
               allowFullScreen>

@@ -1,10 +1,11 @@
 import os
-from fastapi import FastAPI, HTTPException
+import shutil
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-from database import query_db, get_schema
+from database import query_db, get_schema, process_csv
 from ai_service import generate_sql_and_insights
 
 # Load environment variables
@@ -28,6 +29,37 @@ class QueryRequest(BaseModel):
 def read_root():
     return {"message": "AI BI Dashboard Backend Running!"}
 
+@app.get("/api/schema")
+def get_schema_endpoint():
+    import sqlite3
+    from database import DB_PATH
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.execute("PRAGMA table_info(customer_data);")
+        columns = [{"name": row[1], "type": row[2]} for row in cursor.fetchall()]
+        conn.close()
+        return {"table": "customer_data", "columns": columns}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/upload-csv")
+async def upload_csv(file: UploadFile = File(...)):
+    if not file.filename.endswith('.csv'):
+        raise HTTPException(status_code=400, detail="Only CSV files are allowed.")
+    
+    upload_path = f"uploaded_{file.filename}"
+    try:
+        with open(upload_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        success = process_csv(upload_path)
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to process CSV via pandas.")
+            
+        return {"message": "CSV successfully uploaded and schema dynamically generated."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File transfer error: {str(e)}")
+
 @app.post("/api/query")
 async def process_query(request: QueryRequest):
     user_query = request.user_query
@@ -39,6 +71,12 @@ async def process_query(request: QueryRequest):
     try:
         # Ask Gemini
         ai_response = generate_sql_and_insights(user_query, schema)
+        
+        if ai_response.get("error"):
+            return {
+                "error": f"AI Engine Error: {ai_response.get('error')}",
+                "data": []
+            }
         
         sql_query = ai_response.get("query")
         chart_type = ai_response.get("chart", "none")

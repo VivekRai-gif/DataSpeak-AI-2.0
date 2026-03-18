@@ -700,13 +700,11 @@ button {
 }
 
 .chart-card {
-  background: rgba(15, 15, 17, 0.5);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: #060606;
   padding: 2rem;
   border-radius: var(--radius-xl);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
 .chart-card h3 {

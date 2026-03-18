@@ -21,36 +21,38 @@ def init_db():
     conn.close()
 
 def get_schema() -> str:
-    """Returns the schema of the 'customer_data' table for Prompt context."""
-    return '''
-    Table: customer_data
-    Columns:
-    - age (INTEGER)
-    - monthly_income (INTEGER)
-    - daily_internet_hours (REAL)
-    - smartphone_usage_years (INTEGER)
-    - social_media_hours (REAL)
-    - online_payment_trust_score (INTEGER)
-    - tech_savvy_score (INTEGER)
-    - monthly_online_orders (INTEGER)
-    - monthly_store_visits (INTEGER)
-    - avg_online_spend (INTEGER)
-    - avg_store_spend (INTEGER)
-    - discount_sensitivity (INTEGER)
-    - return_frequency (INTEGER)
-    - avg_delivery_days (INTEGER)
-    - delivery_fee_sensitivity (INTEGER)
-    - free_return_importance (INTEGER)
-    - product_availability_online (INTEGER)
-    - impulse_buying_score (INTEGER)
-    - need_touch_feel_score (INTEGER)
-    - brand_loyalty_score (INTEGER)
-    - environmental_awareness (INTEGER)
-    - time_pressure_level (INTEGER)
-    - gender (TEXT)
-    - city_tier (TEXT)
-    - shopping_preference (TEXT) e.g. Store, Online, Hybrid
-    '''
+    """Dynamically returns the schema of the 'customer_data' table for Prompt context."""
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        cursor = conn.execute("PRAGMA table_info(customer_data);")
+        columns = cursor.fetchall()
+        
+        schema_lines = ["Table: customer_data", "Columns:"]
+        for col in columns:
+            col_name = col[1]
+            col_type = col[2]
+            schema_lines.append(f"- {col_name} ({col_type})")
+            
+        return "\n".join(schema_lines)
+    except Exception as e:
+        return f"Error reading schema: {str(e)}"
+    finally:
+        conn.close()
+
+def process_csv(file_path: str) -> bool:
+    """Reads a newly uploaded CSV and replaces the 'customer_data' table in SQLite."""
+    conn = sqlite3.connect(DB_PATH)
+    try:
+        df = pd.read_csv(file_path)
+        # Sanitize column names: replace spaces/symbols to make them SQL friendly
+        df.columns = [str(c).strip().replace(' ', '_').replace('.', '') for c in df.columns]
+        df.to_sql("customer_data", conn, if_exists="replace", index=False)
+        return True
+    except Exception as e:
+        print(f"Error processing CSV: {e}")
+        return False
+    finally:
+        conn.close()
 
 def query_db(query: str):
     """Executes a SQL query securely. Prevents destructive DROP/DELETE."""

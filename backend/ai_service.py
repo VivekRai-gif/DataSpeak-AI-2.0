@@ -13,7 +13,7 @@ client = Groq(api_key=api_key)
 
 # The mixtral or llama model usually supported on Groq
 # Wait, llama-3.1-8b-instant or llama-3.3-70b-versatile or mixtral-8x7b-32768
-model_name = "llama-3.3-70b-versatile"
+model_name = "llama-3.1-8b-instant"
 
 def generate_sql_and_insights(user_query: str, schema: str) -> Dict[str, Any]:
     """

@@ -1,21 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { Send, Zap, User, RefreshCcw, Bell, TrendingUp, Users, DollarSign, CheckCircle, Search, Terminal, AlertTriangle } from 'lucide-react';
 import DynamicChart from '../components/DynamicChart';
 import Sidebar from '../components/Sidebar';
 
 const SUGGESTIONS = [
-  "Show total sales by region",
-  "Monthly revenue trend for 2023",
-  "Top 3 products by units sold",
-  "Sales breakdown by category"
+  "Show average monthly income by city tier",
+  "Show online orders by gender",
+  "Show store visits by shopping preference",
+  "Compare online vs store spending by city tier",
+  "Show discount sensitivity by gender"
 ];
 
 const Dashboard = () => {
+  const location = useLocation();
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [dashboardData, setDashboardData] = useState(null);
   const [error, setError] = useState(null);
+
+  // Auto-run query if navigated here from the Analytics page
+  useEffect(() => {
+    if (location.state?.autoQuery) {
+      handleSubmit(null, location.state.autoQuery);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e, forcedQuery = null) => {
     if (e) e.preventDefault();
@@ -36,6 +46,10 @@ const Dashboard = () => {
          setError(response.data.error);
       } else {
          setDashboardData(response.data);
+         // Save to localStorage history
+         const prev = JSON.parse(localStorage.getItem('queryHistory') || '[]');
+         const newEntry = { query: q, timestamp: new Date().toLocaleString() };
+         localStorage.setItem('queryHistory', JSON.stringify([newEntry, ...prev].slice(0, 50)));
       }
     } catch (err) {
       console.error(err);
@@ -103,7 +117,7 @@ const Dashboard = () => {
             <input 
               type="text" 
               className="chat-input" 
-              placeholder="E.g., 'Show monthly revenue for Q3 by region'" 
+              placeholder="Enter your message..." 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               disabled={loading}
