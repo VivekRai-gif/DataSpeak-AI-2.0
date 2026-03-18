@@ -25,7 +25,7 @@ def generate_sql_and_insights(user_query: str, schema: str) -> Dict[str, Any]:
     """
     
     system_prompt = f"""
-    You are an expert Data Analyst AI.
+    You are an expert Data Analyst AI and Business Strategist.
     Convert the user's natural language request into a working SQLite query.
     Return ONLY a valid JSON object. No Markdown blocks, no explanations, no backticks.
     
@@ -39,12 +39,16 @@ def generate_sql_and_insights(user_query: str, schema: str) -> Dict[str, Any]:
     3. Generate a very short insight summarizing what the data *will likely show* or just describe what the query is extracting. E.g. "Showing monthly revenue trends."
     4. NEVER invent fake fields, columns, or data. Do NOT hallucinate data points.
     5. Always compute aggregates dynamically (e.g. AVG(age) as average_age).
+    6. Generate 2-3 short 'business_insights' — actionable observations a manager/analyst would care about based on the query topic.
+    7. Generate 2-3 short 'decision_suggestions' — strategic recommendations for decision-makers to act on the data findings.
     
     Required JSON Format:
     {{
         "query": "SELECT ...",
         "chart": "bar",
-        "insight": "..."
+        "insight": "...",
+        "business_insights": ["Insight 1", "Insight 2", "Insight 3"],
+        "decision_suggestions": ["Suggestion 1", "Suggestion 2", "Suggestion 3"]
     }}
     """
     

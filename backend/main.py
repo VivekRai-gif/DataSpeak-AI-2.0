@@ -81,6 +81,8 @@ async def process_query(request: QueryRequest):
         sql_query = ai_response.get("query")
         chart_type = ai_response.get("chart", "none")
         insight = ai_response.get("insight", "")
+        business_insights = ai_response.get("business_insights", [])
+        decision_suggestions = ai_response.get("decision_suggestions", [])
         
         if not sql_query:
             raise HTTPException(status_code=400, detail="Failed to generate SQL.")
@@ -92,7 +94,9 @@ async def process_query(request: QueryRequest):
             "query": sql_query,
             "chart": chart_type,
             "data": result_data,
-            "insight": insight
+            "insight": insight,
+            "business_insights": business_insights,
+            "decision_suggestions": decision_suggestions
         }
     except Exception as e:
         print(f"Error processing query: {e}")

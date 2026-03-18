@@ -205,16 +205,44 @@ const Dashboard = () => {
                     <Zap size={20} />
                     <span>AI Insights</span>
                   </div>
+
+                  {/* Summary Insight */}
                   <div className="insight-point">
                     <CheckCircle size={16} color="var(--success)" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <p>{dashboardData.insight}</p>
                   </div>
-                  <div className="insight-point">
-                    <AlertTriangle size={16} color="var(--warning)" style={{ flexShrink: 0, marginTop: '2px' }} />
-                    <p>Generated SQL directly from your natural language query.</p>
-                  </div>
 
-                  <h4 style={{ marginTop: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+                  {/* Business Insights */}
+                  {dashboardData.business_insights?.length > 0 && (
+                    <>
+                      <h4 style={{ marginTop: '1.5rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#60a5fa', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        📊 Business Insights
+                      </h4>
+                      {dashboardData.business_insights.map((bi, i) => (
+                        <div key={i} className="insight-point" style={{ marginBottom: '0.5rem' }}>
+                          <TrendingUp size={15} color="#60a5fa" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <p style={{ fontSize: '0.9rem' }}>{bi}</p>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Decision-Maker Suggestions */}
+                  {dashboardData.decision_suggestions?.length > 0 && (
+                    <>
+                      <h4 style={{ marginTop: '1.5rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#c77dff', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        🎯 Decision-Maker Suggestions
+                      </h4>
+                      {dashboardData.decision_suggestions.map((ds, i) => (
+                        <div key={i} className="insight-point" style={{ marginBottom: '0.5rem' }}>
+                          <AlertTriangle size={15} color="var(--warning)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                          <p style={{ fontSize: '0.9rem' }}>{ds}</p>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  <h4 style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
                     <Terminal size={16} /> Executed Query
                   </h4>
                   <pre className="query-text">
